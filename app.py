@@ -67,5 +67,41 @@ def delete(_UserID):
     return 'deleted _UserID: %d' % _UserID
 
 
+@app.route('/registration/')
+def registration():
+    db = sqlite3.connect('todosqli.db')
+    cursor = db.cursor()
+
+    UserName = request.args.get('UserName')
+    Email = request.args.get('Email')
+    PasswordHash = request.args.get('PasswordHash')
+    CreatedAt = request.args.get('CreatedAt')
+    IsActive = request.args.get('IsActive')
+    cursor.execute(
+        'INSERT INTO User(UserName, Email, PasswordHash, CreatedAt, ISActive) VALUES("%s", "%s", "%s", "%f", "%d")' % (UserName, Email, PasswordHash, CreatedAt, IsActive))
+    db.commit()
+
+    db.close()
+    return 'UserName: %s  |  Email: %s | PasswordHash: %s | CreatedAt: %f | IsActive: %d' % (UserName, Email, PasswordHash, CreatedAt, IsActive)
+
+
+@app.route('/login/')
+def login():
+    db = sqlite3.connect('todosqli.db')
+    cursor = db.cursor()
+
+    Email = request.args.get('Email')
+    PasswordHash = request.args.get('PasswordHash')
+
+    cursor.execute(
+        'SELECT * FROM User WHERE Email LIKE {} AND PasswordHash LIKE {}'.format(Email, PasswordHash))
+
+    User = cursor.fetchall()
+    db.commit()
+
+    db.close()
+    return User
+
+
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
