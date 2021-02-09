@@ -67,7 +67,7 @@ def delete(_TaskID):
     db = sqlite3.connect('todosqli.db')
     cursor = db.cursor()
 
-    cursor.execute('DELETE FROM Task WHERE TaskID=%d' % _UserID)
+    cursor.execute('DELETE FROM Task WHERE TaskID=%d' % _TaskID)
     db.commit()
 
     db.close()
